@@ -1,0 +1,16 @@
+<div class="flex flex-row flex-wrap w-4/6 justify-center mx-auto">
+			{% for cafe in cafes %}
+				<div class="bg-white shadow-[0_4px_12px_-5px_rgba(0,0,0,0.4)] w-full max-w-sm rounded-lg overflow-hidden mx-auto font-[sans-serif] mt-4">
+					<div class="min-h-[256px]">
+						<img src="{{ asset(cafe.image) }}" class="w-full"/>
+					</div>
+					<div class="p-6">
+						<h3 class="text-gray-800 text-xl font-bold">{{ cafe.nom }}</h3>
+						<p class="mt-4 text-sm text-gray-800 leading-relaxed">{{ cafe.marque }}</p>
+						<p class="mt-4 text-sm text-gray-500 leading-relaxed">{{ cafe.categorie }}</p>
+						<p class="mt-4 text-sm text-gray-800 leading-relaxed">{{ cafe.prix }}</p>
+						<button type="button" class="mt-6 px-5 py-2.5 rounded-lg text-white text-sm tracking-wider border-none outline-none bg-blue-600 hover:bg-blue-700 active:bg-blue-600">Voir</button>
+					</div>
+				</div>
+			{% endfor %}
+		</div>

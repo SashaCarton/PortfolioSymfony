@@ -1,0 +1,297 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard
+{% endblock %}
+
+{% block body %}
+	<div class="min-h-screen bg-gray-100">
+		<header class="bg-white shadow">
+			<div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+				<h1 class="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
+			</div>
+		</header>
+		<main class="py-10">
+			<div
+				class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+
+				<!-- Products Section -->
+				<div class="bg-white shadow sm:rounded-lg p-6">
+					<h2 class="text-xl font-bold text-gray-900 productContainer mx-auto">Produits</h2>
+					<ul class="mt-4 space-y-2 product-list">
+						{% for product in products %}
+							<li class="flex items-center justify-between p-4 bg-gray-100 rounded">
+								<span>{{ product.name }}</span>
+								<span style="display: none;">{{ product.note }}</span>
+								<span style="display: none;">{{ product.brand.name }}</span>
+								<span class="text-sm text-gray-500">{{ product.price | number_format(2, '.', ',') }}
+									€</span>
+							</li>
+						{% else %}
+							<p class="text-gray-500">Pas de produits disponible</p>
+						{% endfor %}
+					</ul>
+				</div>
+
+				<!-- Slider Section -->
+				<div class="bg-white shadow sm:rounded-lg p-6">
+					<h2 class="text-xl font-bold text-gray-900">Sliders</h2>
+					<ul class="mt-4 space-y-2 brand-list">
+						{% for slide in slider %}
+							<li class="flex items-center justify-between p-4 bg-gray-100 rounded">
+								<span>{{ slide.title }}</span>
+								<span class="text-sm text-gray-500">{{ slide.content }}</span>
+							</li>
+						{% else %}
+							<p class="text-gray-500">Pas de slider actif</p>
+						{% endfor %}
+					</ul>
+				</div>
+
+				<!-- Trending Products Section -->
+				<div class="bg-white shadow sm:rounded-lg p-6">
+					<h2 class="text-xl font-bold text-gray-900">Produits tendance</h2>
+					<ul class="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+						{% for trendItem in trend %}
+							<li class="bg-gray-100 p-4 rounded shadow">
+								<h3 class="font-bold">{{ trendItem.name }}</h3>
+								<p class="text-gray-500">{{ trendItem.price | number_format(2, '.', ',') }}
+									€</p>
+							</li>
+						{% else %}
+							<p class="text-gray-500">Pas de produits tendance</p>
+						{% endfor %}
+					</ul>
+				</div>
+
+				<!-- Brands Section -->
+				<div class="bg-white shadow sm:rounded-lg p-6">
+					<h2 class="text-xl font-bold text-gray-900">Marques</h2>
+					<ul class="mt-4 space-y-2 brand-list">
+						{% for brand in brands %}
+							<li class="flex items-center justify-between p-4 bg-gray-100 rounded">
+								<span>{{ brand.name }}</span>
+								<span class="text-sm text-gray-500">{{ brand.products | length }}
+									produits</span>
+							</li>
+						{% else %}
+							<p class="text-gray-500">Pas de marques</p>
+						{% endfor %}
+					</ul>
+				</div>
+
+
+				<!-- Active Sliders Section -->
+				<div class="bg-white shadow sm:rounded-lg p-6">
+					<h2 class="text-xl font-bold text-gray-900">Slider actif</h2>
+					<ul class="mt-4 space-y-2">
+						{% for activeSlider in slider %}
+							<li class="flex items-center justify-between p-4 bg-gray-100 rounded">
+								<span>{{ activeSlider.title }}</span>
+								<span class="text-sm text-gray-500">{{ activeSlider.getIsActive() ? 'Active' : 'Inactive' }}</span>
+							</li>
+						{% else %}
+							<p class="text-gray-500">Pas de slider Actif</p>
+						{% endfor %}
+					</ul>
+				</div>
+
+				<!-- Contact Section -->
+				<div class="bg-white shadow sm:rounded-lg p-6">
+					<h2 class="text-xl font-bold text-gray-900">Demande de contact</h2>
+					<ul class="mt-4 space-y-2">
+						{% for contact in contact %}
+							<li class="flex items-center justify-between p-4 bg-gray-100 rounded">
+								<span>{{ contact.lastName }}</span>
+								<span style="display: none;">{{ contact.firstName }}</span>
+								<span style="display: none;">{{ contact.phone }}</span>
+								<span style="display: none;">{{ contact.message }}</span>
+								<span class="text-sm text-gray-500">{{ contact.email }}</span>
+							</li>
+						{% else %}
+							<p class="text-gray-500">Pas de messages</p>
+						{% endfor %}
+					</ul>
+				</div>
+			</div>
+		</main>
+	</div>
+	<script>
+		document.addEventListener('DOMContentLoaded', function () { // Pagination
+const itemsPerPage = 5;
+const productContainer = document.querySelector('.productContainer');
+const products = document.querySelectorAll('.product-list li');
+const totalPages = Math.ceil(products.length / itemsPerPage);
+
+function showPage(page) {
+products.forEach((product, index) => {
+product.style.display = index >= (page - 1) * itemsPerPage && index < page * itemsPerPage ? 'flex' : 'none';
+});
+}
+
+function createPagination() { // Supprime la pagination existante pour éviter les doublons
+const existingPagination = document.querySelector('.pagination');
+if (existingPagination) {
+existingPagination.remove();
+}
+
+const pagination = document.createElement('div');
+pagination.className = 'pagination mt-4 mx-auto space-x-2 flex justify-center';
+
+for (let i = 1; i <= totalPages; i++) {
+const pageLink = document.createElement('button');
+pageLink.innerText = i;
+pageLink.className = 'px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500';
+pageLink.addEventListener('click', () => showPage(i));
+pagination.appendChild(pageLink);
+}
+
+productContainer.appendChild(pagination);
+}
+
+if (products.length > itemsPerPage) {
+showPage(1);
+createPagination();
+}
+
+// Carte produit flottante
+const productCard = document.createElement('div');
+productCard.className = 'product-card bg-white shadow sm:rounded-lg p-6 mt-6 hidden absolute z-50';
+document.body.appendChild(productCard);
+
+document.querySelectorAll('.product-list li').forEach((productItem) => {
+productItem.addEventListener('mouseover', (event) => {
+const productName = productItem.querySelector('span:first-child').innerText;
+const productPrice = productItem.querySelector('span:last-child').innerText;
+const productNote = productItem.querySelector('span:nth-child(2)').innerText;
+const productBrand = productItem.querySelector('span:nth-child(3)').innerText;
+
+// Remplir la carte produit
+productCard.innerHTML = `
+                <h2 class="text-xl font-bold text-gray-900">Café du Jour</h2>
+                <div class="mt-4">
+                    <h3 class="text-lg font-semibold">Nom du Café: ${productName}</h3>
+                    <p class="text-gray-500">Prix: ${productPrice}</p>
+                    <p class="text-gray-500">Description: ${productNote}</p>
+					<p class="text-gray-500">Marque: ${productBrand}</p>
+                </div>
+            `;
+
+// Positionner la carte produit
+const rect = productItem.getBoundingClientRect();
+const cardWidth = 300; // Largeur approximative de la carte
+const cardHeight = 150;
+// Hauteur approximative de la carte
+
+// Calcul de positionnement
+const top = rect.bottom + cardHeight > window.innerHeight ? rect.top - cardHeight : rect.bottom;
+const left = rect.right + cardWidth > window.innerWidth ? rect.left - cardWidth : rect.left;
+
+productCard.style.top = `${
+top + window.scrollY
+}px`;
+productCard.style.left = `${
+left + window.scrollX
+}px`;
+
+productCard.classList.remove('hidden');
+});
+
+productItem.addEventListener('mouseout', () => {
+productCard.classList.add('hidden');
+});
+});
+});
+
+// Carte contact flottante
+const contactCard = document.createElement('div');
+contactCard.className = 'contact-card bg-white shadow sm:rounded-lg p-6 mt-6 hidden absolute z-50';
+document.body.appendChild(contactCard);
+
+document.querySelectorAll('.contact-list li').forEach((contactItem) => {
+contactItem.addEventListener('mouseover', (event) => {
+const contactLastName = contactItem.querySelector('span:nth-child(1)').innerText;
+const contactFirstName = contactItem.querySelector('span:nth-child(2)').innerText;
+const contactPhone = contactItem.querySelector('span:nth-child(3)').innerText;
+const contactMessage = contactItem.querySelector('span:nth-child(4)').innerText;
+const contactEmail = contactItem.querySelector('span:nth-child(5)').innerText;
+
+// Remplir la carte contact
+contactCard.innerHTML = `
+			<h2 class="text-xl font-bold text-gray-900">Contact</h2>
+			<div class="mt-4">
+				<h3 class="text-lg font-semibold">Nom: ${contactLastName} ${contactFirstName}</h3>
+				<p class="text-gray-500">Téléphone: ${contactPhone}</p>
+				<p class="text-gray-500">Message: ${contactMessage}</p>
+				<p class="text-gray-500">Email: ${contactEmail}</p>
+			</div>
+		`;
+
+// Positionner la carte contact
+const rect = contactItem.getBoundingClientRect();
+const cardWidth = 300; // Largeur approximative de la carte
+const cardHeight = 150;
+// Hauteur approximative de la carte
+
+// Calcul de positionnement
+const top = rect.bottom + cardHeight > window.innerHeight ? rect.top - cardHeight : rect.bottom;
+const left = rect.right + cardWidth > window.innerWidth ? rect.left - cardWidth : rect.left;
+
+contactCard.style.top = `${
+top + window.scrollY
+}px`;
+contactCard.style.left = `${
+left + window.scrollX
+}px`;
+
+contactCard.classList.remove('hidden');
+});
+
+contactItem.addEventListener('mouseout', () => {
+contactCard.classList.add('hidden');
+});
+});
+// Carte marque flottante
+const brandCard = document.createElement('div');
+brandCard.className = 'brand-card bg-white shadow sm:rounded-lg p-6 mt-6 hidden absolute z-50';
+document.body.appendChild(brandCard);
+
+document.querySelectorAll('.brand-list li').forEach((brandItem) => {
+brandItem.addEventListener('mouseover', (event) => {
+const brandName = brandItem.querySelector('span:first-child').innerText;
+const brandProductsCount = brandItem.querySelector('span:last-child').innerText;
+
+// Remplir la carte marque
+brandCard.innerHTML = `
+			<h2 class="text-xl font-bold text-gray-900">Marque</h2>
+			<div class="mt-4">
+				<h3 class="text-lg font-semibold">Nom: ${brandName}</h3>
+				<p class="text-gray-500">Nombre de produits: ${brandProductsCount}</p>
+			</div>
+		`;
+
+// Positionner la carte marque
+const rect = brandItem.getBoundingClientRect();
+const cardWidth = 300; // Largeur approximative de la carte
+const cardHeight = 100;
+// Hauteur approximative de la carte
+
+// Calcul de positionnement
+const top = rect.bottom + cardHeight > window.innerHeight ? rect.top - cardHeight : rect.bottom;
+const left = rect.right + cardWidth > window.innerWidth ? rect.left - cardWidth : rect.left;
+
+brandCard.style.top = `${
+top + window.scrollY
+}px`;
+brandCard.style.left = `${
+left + window.scrollX
+}px`;
+
+brandCard.classList.remove('hidden');
+});
+
+brandItem.addEventListener('mouseout', () => {
+brandCard.classList.add('hidden');
+});
+});
+	</script>
+{% endblock %}
