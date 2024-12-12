@@ -1,0 +1,24 @@
+@font-face {
+    font-family: 'OggThin';
+    src: url('/assets/fonts/Ogg-Thin.otf') format('opentype');
+    font-weight: thin;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'OggLight';
+    src: url('/assets/fonts/OggText-Light.otf') format('opentype');
+    font-weight: light;
+    font-style: normal;
+}
+
+header a {
+    font-family: 'OggThin';
+    font-size: 1.5em;
+    font-weight: 100;
+    text-decoration: none;
+}
+
+header li div {
+    border-top: solid 1px #000;
+}

@@ -1,0 +1,13 @@
+{
+  "name": "portfoliosymfony-1",
+  "version": "1.0.0",
+  "description": "Un portfolio personnel développé avec **Symfony**, conçu pour mettre en avant des compétences, expériences et projets dans un design moderne et intuitif.",
+  "main": "tailwind.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:css": "tailwindcss -i ./resources/css/input.css -o ./public/css/output.css --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
